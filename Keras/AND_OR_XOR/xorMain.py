@@ -14,12 +14,16 @@ x_train = x_train.astype('float32')
 
 y_train = np.array([0,1,1,0])
 
+#x_train = [[0,0],[1,0],[0,1],[1,1]]
+#y_train = [0,1,1,0]
+
+
 print(x_train)
 print(y_train)
 
 # create model
 model = Sequential()
-model.add(Dense(8, input_dim=2, activation='tanh'))
+model.add(Dense(3, input_dim=2, activation='tanh'))
 model.add(Dense(1, activation='sigmoid'))
 
 # Compile model
