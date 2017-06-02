@@ -7,7 +7,7 @@ sess = tf.Session()
 
 #===============================================================================================================================
 def printStepTitle(title):
-    input("PRESS ENTER TO CONTINUE.")
+    #input("PRESS ENTER TO CONTINUE.")
     print("")
     print("#----------------------------------------------------------------------------")
     print(title)
@@ -233,8 +233,8 @@ callbacks_list.append(csv)
 printStepTitle("# step 7 - Fitting")
 #----------------------------------------------------------------------------
 batch_size = 128
-epochs = 5
-#epochs = 15
+#epochs = 5
+epochs = 15
 
 model.fit(x_train, y_train,
           batch_size=batch_size,
