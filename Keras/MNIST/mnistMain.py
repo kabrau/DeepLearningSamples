@@ -7,7 +7,7 @@ sess = tf.Session()
 
 #===============================================================================================================================
 def printStepTitle(title):
-    #input("PRESS ENTER TO CONTINUE.")
+    input("PRESS ENTER TO CONTINUE.")
     print("")
     print("#----------------------------------------------------------------------------")
     print(title)
@@ -33,7 +33,7 @@ printStepTitle("# optional step - Show Images")
 
 import matplotlib.pyplot as plt
 
-if False:
+if True:
     #Color
     plt.imshow(x_train[0])
     plt.title("GroundTruth => "+str(y_train[0]))
@@ -213,16 +213,16 @@ callbacks_list = []
 # checkpoint
 filepath="./model_"+str(optionModel)+"_"+optimizer+"-{epoch:03d}-{val_loss:.4f}-{val_acc:.4f}.h5w"
 checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=0, save_best_only=True, mode='auto', save_weights_only=True)
-#callbacks_list.append(checkpoint)
+callbacks_list.append(checkpoint)
 
 # earlyStopping
-earlyStopping= EarlyStopping(monitor='val_loss', patience=1, verbose=0, mode='auto')
-#callbacks_list.append(earlyStopping)
+earlyStopping= EarlyStopping(monitor='val_loss', patience=20, verbose=0, mode='auto')
+callbacks_list.append(earlyStopping)
 
 # History
-history = False
-#history = History()
-#callbacks_list.append(history)
+#history = False
+history = History()
+callbacks_list.append(history)
 
 # CSVLogger
 filepath="./model_"+str(optionModel)+"_"+optimizer+"_log.csv"
@@ -234,7 +234,7 @@ printStepTitle("# step 7 - Fitting")
 #----------------------------------------------------------------------------
 batch_size = 128
 #epochs = 5
-epochs = 15
+epochs = 5
 
 model.fit(x_train, y_train,
           batch_size=batch_size,

@@ -102,3 +102,4 @@ ENV/
 *.json
 *.csv
 model_1.png
+*.h5w
