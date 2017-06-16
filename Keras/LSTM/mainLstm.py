@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import keras
 
-from random import random
+from random import choice
 from numpy import array
 from numpy import cumsum
 from keras.models import Sequential
@@ -10,80 +10,50 @@ from keras.layers import LSTM
 from keras.layers import Dense
 from keras.layers import TimeDistributed
 
-# create a sequence classification instance
-def get_sequence(n_timesteps, num_classes):
-    # create a sequence of random numbers in [0,1]
-    X = array([random() for _ in range(n_timesteps)])
+epochs=200
+samples = 100
+n_timesteps = 4
+opcoes = [1,2,3,4]
 
-    # calculate cut-off value to change class values
-    limit2 = n_timesteps/5.0
-    limit3 = n_timesteps/4.0
-    limit4 = n_timesteps/3.0
+# max = 4*4 + 4 + 4 - 1 = 24
+# nin = 1*1 + 1 + 1 - 4 = -1
 
-    # determine the class outcome for each item in cumulative sequence
-    y = []
-    x = 0.0 
-    for i in range(n_timesteps):
-        x = x + X[i]
-        value = 0
-        if x < limit2:
-            value = 1
-        elif x < limit3:
-            value = 2
-        elif x < limit4:
-            value = 3
+X = array([[choice(opcoes) for _ in range(n_timesteps)] for _ in range(samples)])
+y = []
+for v in X:
+    y.append( (v[0]*v[1]) + v[1] + v[2] - v[3]  )
 
-        y.append(value)
-        #print(x, value, limit2, limit3, limit4)
+X = np.reshape(X, (X.shape[0], 1, X.shape[1]))
 
-    y = np.array(y)
+y = np.array(y)
+y = np.reshape(y, (y.shape[0],1,1))
 
-    # reshape input and output data to be suitable for LSTMs
-    X = X.reshape(1, n_timesteps, 1)
-
-    y = keras.utils.to_categorical(y, num_classes)
-    y = y.reshape(1, n_timesteps, 4)
-    return X, y
-
-# define problem properties
-n_timesteps = 10
-num_classes = 4
-
-#X,y = get_sequence(10, num_classes)
-#print(X,y)
-#print(X.shape)
-#print(y.shape)
+print(X.shape)
+print(y.shape)
 #sys.exit(0)
 
 # define LSTM
 model = Sequential()
-model.add(LSTM(20, input_shape=(n_timesteps, 1), return_sequences=True))
-model.add(TimeDistributed(Dense(num_classes, activation='softmax')))
+model.add(LSTM(16, input_shape=(1,n_timesteps), return_sequences=True))
+model.add(Dense(1))
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='mean_squared_error', optimizer='adam', metrics=['acc'])
 
 from keras.utils.vis_utils import plot_model
 plot_model(model, to_file='./model.png', show_shapes=True)  
 
 # train LSTM
-for epoch in range(10000):
-    #print(epoch, "                                  ", end="")
-    # generate new random sequence
-    X,y = get_sequence(n_timesteps,num_classes)
-    # fit model for one epoch on this sequence
-    model.fit(X, y, epochs=1, batch_size=1, verbose=1)
-
+model.fit(X, y, epochs=epochs, batch_size=1, verbose=1)
 
 score = model.evaluate(X, y, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-# evaluate LSTM
-X,y = get_sequence(n_timesteps,num_classes)
-yhat = model.predict_classes(X, verbose=0)
-print(yhat.shape)
-for i in range(n_timesteps):
-    print('Expected:', y[0, i], 'Predicted', yhat[0, i])
+#evaluate LSTM
+yhat = model.predict(X, verbose=0)
+#print(yhat.shape)
+for i in range(samples):
+    print('Expected:', y[i, 0, 0], 'Predicted', yhat[i, 0, 0])
 
 
 sys.exit(0)    
