@@ -66,7 +66,7 @@ from keras.utils.vis_utils import plot_model
 plot_model(model, to_file='./model.png', show_shapes=True)  
 
 # train LSTM
-for epoch in range(2000):
+for epoch in range(4000):
     #print(epoch, "                                  ", end="")
     # generate new random sequence
     X,y = get_sequence(n_timesteps,num_classes)
