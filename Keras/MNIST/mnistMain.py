@@ -230,7 +230,7 @@ csv = CSVLogger(filepath, separator=',', append=False)
 callbacks_list.append(csv)
 
 #----------------------------------------------------------------------------
-printStepTitle("# step 7 - Fitting")
+printStepTitle("# step 7 - Train")
 #----------------------------------------------------------------------------
 batch_size = 128
 #epochs = 5

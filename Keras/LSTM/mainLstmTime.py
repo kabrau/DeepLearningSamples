@@ -34,7 +34,7 @@ def get_sequence(n_timesteps, num_classes):
             value = 3
 
         y.append(value)
-        #print(x, value, limit2, limit3, limit4)
+        #print(i, X[i], x, value, limit2, limit3, limit4)
 
     y = np.array(y)
 
@@ -66,7 +66,7 @@ from keras.utils.vis_utils import plot_model
 plot_model(model, to_file='./model.png', show_shapes=True)  
 
 # train LSTM
-for epoch in range(10000):
+for epoch in range(2000):
     #print(epoch, "                                  ", end="")
     # generate new random sequence
     X,y = get_sequence(n_timesteps,num_classes)
@@ -81,9 +81,8 @@ print('Test accuracy:', score[1])
 # evaluate LSTM
 X,y = get_sequence(n_timesteps,num_classes)
 yhat = model.predict_classes(X, verbose=0)
-print(yhat.shape)
+#print(yhat.shape)
 for i in range(n_timesteps):
     print('Expected:', y[0, i], 'Predicted', yhat[0, i])
-
 
 sys.exit(0)    
